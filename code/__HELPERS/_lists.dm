@@ -197,6 +197,7 @@
 	} while(FALSE)
 
 #define SORT_FIRST_INDEX(list) (list[1])
+#define SORT_PRIORITY_INDEX(list) (list["priority"])
 #define SORT_COMPARE_DIRECTLY(thing) (thing)
 #define SORT_VAR_NO_TYPE(varname) var/varname
 /****
@@ -527,6 +528,18 @@
 	while(islist(result))
 		result = pick_weight(fill_with_ones(result))
 	return result
+
+/**
+* Like pick_weight, but decreases the value of the picked element by 1
+ * For example, given the following list:
+ * A = 6, B = 3, C = 1, D = 0
+ * A would have a 60% chance of being picked, after which it would decrease by one and the new list would be
+ * A = 5, B = 3, C = 1, D = 0
+ * Tt would then have a 55.55...% to be picked, rinse and repeat
+*/
+/proc/pick_weight_take(list/list_to_pick)
+	. = pick_weight(list_to_pick)
+	list_to_pick[.]--
 
 /**
  * Given a list, return a copy where values without defined weights are given weight 1.
@@ -889,18 +902,6 @@
 	for(var/key in key_list)
 		. |= LIST_VALUE_WRAP_LISTS(key_list[key])
 
-/**
- * Flattens a keyed list(key = some item, value = quantity of item required) into a list of its contents where each
- * item of the list is duplicated as per the quantity required
- */
-/proc/flatten_quantified_list(list/key_list)
-	if(!islist(key_list))
-		return null
-	. = list()
-	for(var/key in key_list)
-		for(var/_ in 1 to key_list[key])
-			UNTYPED_LIST_ADD(., key)
-
 ///Make a normal list an associative one
 /proc/make_associative(list/flat_list)
 	. = list()
@@ -956,13 +957,6 @@
 		if(value?.locked)
 			continue
 		UNTYPED_LIST_ADD(keys, key)
-	return keys
-
-///Gets the total amount of everything in the associative list.
-/proc/assoc_value_sum(list/input)
-	var/keys = 0
-	for(var/key in input)
-		keys += input[key]
 	return keys
 
 ///compare two lists, returns TRUE if they are the same
@@ -1346,3 +1340,34 @@
 				&& deep_compare_list(log_1["stack"], log_2["stack"])
 		else
 			return TRUE
+
+
+/**
+ * Similar to pick_weight_recursive, except without the weight part, meaning it should hopefully not take
+ * up as much computing power for things that don't +need+ weights.
+ * * * Able to handle cases such as:
+ * * pick_recursive(list(a), list(b), list(c))
+ * * pick_recursive(list(list(a), list(b)))
+ * * pick_recursive(a, list(b), list(list(c), list(d)))
+ * * pick_recusrive(list(a, b, c), d, e)
+ * Really any combination of lists & vars, as long as the passed lists aren't empty
+ */
+/proc/pick_recursive(...)
+	var/result = pick(args)
+	while(islist(result))
+		result = pick(result)
+	return result
+
+/** Takes in two weighted lists and outputs a third list containing the elements of both inputs with their weights blended according to a given proportion.
+ * Not exact and may have rounding errors, will round to nearest 1/1000.
+ * */
+/proc/blend_weighted_lists(list/listA, list/listB, blend)
+	var/list/joined_list = listA | listB
+
+	listA = counterlist_normalise(listA)
+	listB = counterlist_normalise(listB)
+
+	for(var/element in joined_list)
+		joined_list[element] = round((listA[element] * (1 - blend) + listB[element] * (blend)) * 1000)
+
+	return joined_list

@@ -188,31 +188,21 @@
 		. += "Its pair is being held by [mob_holder]."
 		return
 
-/obj/item/storage/box/pinpointer_pairs
-	name = "pinpointer pair box"
-
-/obj/item/storage/box/pinpointer_pairs/PopulateContents()
-	var/obj/item/pinpointer/pair/A = new(null)
-	var/obj/item/pinpointer/pair/B = new(null)
-
-	A.other_pair = B
-	B.other_pair = A
-
-	return list(A, B)
-
 /obj/item/pinpointer/shuttle
 	name = "bounty shuttle pinpointer"
 	desc = "A handheld tracking device that locates the bounty hunter shuttle for quick escapes."
 	icon_state = "pinpointer_hunter"
 	worn_icon_state = "pinpointer_black"
 	icon_suffix = "_hunter"
-	var/obj/shuttleport
+	var/obj/docking_port/mobile/shuttleport
 
 /obj/item/pinpointer/shuttle/Initialize(mapload)
 	. = ..()
 	shuttleport = SSshuttle.getShuttle("huntership")
 
 /obj/item/pinpointer/shuttle/scan_for_target()
+	if(!shuttleport)
+		shuttleport = SSshuttle.getShuttle("huntership")
 	target = shuttleport
 
 /obj/item/pinpointer/shuttle/Destroy()

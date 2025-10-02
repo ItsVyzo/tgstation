@@ -24,9 +24,10 @@
 
 	return attacked_machinery.exchange_parts(user, src) ? ITEM_INTERACT_SUCCESS : ITEM_INTERACT_FAILURE
 
-///Plays the sound for RPED exhanging or installing parts.
-/obj/item/storage/part_replacer/proc/play_rped_sound()
+///Plays the sound & flick animation for RPED exhanging or installing parts.
+/obj/item/storage/part_replacer/proc/play_rped_effect()
 	playsound(src, 'sound/items/tools/rped.ogg', 40, TRUE)
+	flick("[icon_state]_active", src)
 
 /**
  * Gets parts sorted in order of their tier
@@ -72,11 +73,12 @@
 /obj/item/storage/part_replacer/bluespace/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	return interact_with_atom(interacting_with, user, modifiers)
 
-/obj/item/storage/part_replacer/bluespace/play_rped_sound()
+/obj/item/storage/part_replacer/bluespace/play_rped_effect()
 	if(prob(1))
 		playsound(src, 'sound/items/pshoom/pshoom_2.ogg', 40, TRUE)
-		return
-	playsound(src, 'sound/items/pshoom/pshoom.ogg', 40, TRUE)
+	else
+		playsound(src, 'sound/items/pshoom/pshoom.ogg', 40, TRUE)
+	flick("[icon_state]_active", src)
 
 /**
  * Signal handler for when a part has been inserted into the BRPED.
@@ -114,54 +116,49 @@
 
 //RPED with tiered contents
 /obj/item/storage/part_replacer/bluespace/tier1/PopulateContents()
-	return flatten_quantified_list(list(
-		/obj/item/stock_parts/capacitor = 10,
-		/obj/item/stock_parts/scanning_module = 10,
-		/obj/item/stock_parts/servo = 10,
-		/obj/item/stock_parts/micro_laser = 10,
-		/obj/item/stock_parts/matter_bin = 10,
-		/obj/item/stock_parts/power_store/cell/high = 10,
-	))
+	for(var/i in 1 to 10)
+		new /obj/item/stock_parts/capacitor(src)
+		new /obj/item/stock_parts/scanning_module(src)
+		new /obj/item/stock_parts/servo(src)
+		new /obj/item/stock_parts/micro_laser(src)
+		new /obj/item/stock_parts/matter_bin(src)
+		new /obj/item/stock_parts/power_store/cell/high(src)
 
 /obj/item/storage/part_replacer/bluespace/tier2/PopulateContents()
-	return flatten_quantified_list(list(
-		/obj/item/stock_parts/capacitor/adv = 10,
-		/obj/item/stock_parts/scanning_module/adv = 10,
-		/obj/item/stock_parts/servo/nano = 10,
-		/obj/item/stock_parts/micro_laser/high = 10,
-		/obj/item/stock_parts/matter_bin/adv = 10,
-		/obj/item/stock_parts/power_store/cell/super = 10,
-	))
+	for(var/i in 1 to 10)
+		new /obj/item/stock_parts/capacitor/adv(src)
+		new /obj/item/stock_parts/scanning_module/adv(src)
+		new /obj/item/stock_parts/servo/nano(src)
+		new /obj/item/stock_parts/micro_laser/high(src)
+		new /obj/item/stock_parts/matter_bin/adv(src)
+		new /obj/item/stock_parts/power_store/cell/super(src)
 
 /obj/item/storage/part_replacer/bluespace/tier3/PopulateContents()
-	return flatten_quantified_list(list(
-		/obj/item/stock_parts/capacitor/super = 10,
-		/obj/item/stock_parts/scanning_module/phasic = 10,
-		/obj/item/stock_parts/servo/pico = 10,
-		/obj/item/stock_parts/micro_laser/ultra = 10,
-		/obj/item/stock_parts/matter_bin/super = 10,
-		/obj/item/stock_parts/power_store/cell/hyper = 10,
-	))
+	for(var/i in 1 to 10)
+		new /obj/item/stock_parts/capacitor/super(src)
+		new /obj/item/stock_parts/scanning_module/phasic(src)
+		new /obj/item/stock_parts/servo/pico(src)
+		new /obj/item/stock_parts/micro_laser/ultra(src)
+		new /obj/item/stock_parts/matter_bin/super(src)
+		new /obj/item/stock_parts/power_store/cell/hyper(src)
 
 /obj/item/storage/part_replacer/bluespace/tier4/PopulateContents()
-	return flatten_quantified_list(list(
-		/obj/item/stock_parts/capacitor/quadratic = 10,
-		/obj/item/stock_parts/scanning_module/triphasic = 10,
-		/obj/item/stock_parts/servo/femto = 10,
-		/obj/item/stock_parts/micro_laser/quadultra = 10,
-		/obj/item/stock_parts/matter_bin/bluespace = 10,
-		/obj/item/stock_parts/power_store/cell/bluespace = 10,
-	))
+	for(var/i in 1 to 10)
+		new /obj/item/stock_parts/capacitor/quadratic(src)
+		new /obj/item/stock_parts/scanning_module/triphasic(src)
+		new /obj/item/stock_parts/servo/femto(src)
+		new /obj/item/stock_parts/micro_laser/quadultra(src)
+		new /obj/item/stock_parts/matter_bin/bluespace(src)
+		new /obj/item/stock_parts/power_store/cell/bluespace(src)
 
 //used in a cargo crate
 /obj/item/storage/part_replacer/cargo/PopulateContents()
-	return flatten_quantified_list(list(
-		/obj/item/stock_parts/capacitor = 10,
-		/obj/item/stock_parts/scanning_module = 10,
-		/obj/item/stock_parts/servo = 10,
-		/obj/item/stock_parts/micro_laser = 10,
-		/obj/item/stock_parts/matter_bin = 10,
-	))
+	for(var/i in 1 to 10)
+		new /obj/item/stock_parts/capacitor(src)
+		new /obj/item/stock_parts/scanning_module(src)
+		new /obj/item/stock_parts/servo(src)
+		new /obj/item/stock_parts/micro_laser(src)
+		new /obj/item/stock_parts/matter_bin(src)
 
 ///Cyborg variant
 /obj/item/storage/part_replacer/cyborg
@@ -172,3 +169,8 @@
 	lefthand_file = 'icons/mob/inhands/items/devices_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	storage_type = /datum/storage/rped/bluespace
+
+/obj/item/storage/part_replacer/cyborg/small
+	desc = "Special mechanical module made to store, sort, and apply standard machine parts. This one has as much space, as your regular RPED"
+	icon_state = "RPED"
+	storage_type = /datum/storage/rped

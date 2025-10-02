@@ -58,6 +58,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define DECAL_INIT_UPDATE_EXPERIENCED_1 (1<<17)
 /// This atom always returns its turf in get_turf_pixel instead of the turf from its offsets
 #define IGNORE_TURF_PIXEL_OFFSET_1 (1<<18)
+/// This atom does not need to generate its own preview icon for GAGS
+#define NO_NEW_GAGS_PREVIEW_1 (1<<19)
 
 // Update flags for [/atom/proc/update_appearance]
 /// Update the atom's name
@@ -215,6 +217,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define FREEZE_PROOF (1<<7)
 /// can't be shuttle crushed.
 #define SHUTTLE_CRUSH_PROOF (1<<8)
+/// can't be destroyed by bombs
+#define BOMB_PROOF (1<<9)
 
 //tesla_zap
 #define ZAP_MACHINE_EXPLOSIVE (1<<0)
@@ -230,12 +234,14 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define ZAP_FUSION_FLAGS ZAP_OBJ_DAMAGE | ZAP_MOB_DAMAGE | ZAP_MOB_STUN
 #define ZAP_SUPERMATTER_FLAGS ZAP_GENERATES_POWER
 
-///EMP will protect itself.
+///Object will protect itself.
 #define EMP_PROTECT_SELF (1<<0)
-///EMP will protect the contents from also being EMPed.
+///Object will protect its contents from being EMPed.
 #define EMP_PROTECT_CONTENTS (1<<1)
-///EMP will protect the wires.
+///Object will protect its wiring from being EMPed.
 #define EMP_PROTECT_WIRES (1<<2)
+///Don't indicate EMP protection in object examine text.
+#define EMP_NO_EXAMINE (1<<3)
 
 ///Protects against all EMP types.
 #define EMP_PROTECT_ALL (EMP_PROTECT_SELF | EMP_PROTECT_CONTENTS | EMP_PROTECT_WIRES)

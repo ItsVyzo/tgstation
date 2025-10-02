@@ -11,7 +11,7 @@
 		return FALSE
 	return ..()
 
-/datum/storage/pod/New(atom/parent, max_slots, max_specific_storage, max_total_storage)
+/datum/storage/pod/New(atom/parent, max_slots, max_specific_storage, max_total_storage, rustle_sound, remove_rustle_sound)
 	. = ..()
 	// all of these are a type below what actually spawn with
 	// (IE all space suits instead of just the emergency ones)
@@ -24,6 +24,7 @@
 	))
 
 	RegisterSignal(SSsecurity_level, COMSIG_SECURITY_LEVEL_CHANGED, PROC_REF(update_lock))
+	update_lock(new_level = SSsecurity_level.get_current_level_as_number())
 
 /datum/storage/pod/set_parent(atom/new_parent)
 	. = ..()

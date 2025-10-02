@@ -8,7 +8,7 @@
 /obj/item/dyespray/attack_self(mob/user)
 	dye(user, user)
 
-/obj/item/dyespray/pre_attack(atom/target, mob/living/user, params)
+/obj/item/dyespray/pre_attack(atom/target, mob/living/user, list/modifiers, list/attack_modifiers)
 	dye(target, user)
 	return ..()
 
@@ -46,7 +46,7 @@
 	if(!what_to_dye || !user.can_perform_action(src, NEED_DEXTERITY))
 		return
 
-	if(what_to_dye == "External Bodyparts/Organs")
+	if(what_to_dye == "External Body Parts")
 		dye_organ(target, user)
 		return
 
